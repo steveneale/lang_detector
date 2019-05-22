@@ -86,7 +86,7 @@ def split_dataset(dataset, languages, use_seed):
         np.random.seed(0)
     # Shuffle the training data and return the desired sample siaze (as defined in the .config.py file)
     train = train.reindex(np.random.permutation(train.index.values))
-    train = train.sample(n=config["train_size"], random_state=seed if use_seed == True else None)
+    train = train.sample(n=config["train_size"], random_state=100 if use_seed == True else None)
     # Return the training and test sets
     return train, test
 
@@ -142,9 +142,9 @@ def detect_language(input_text, model):
     return y
 
 
-###################
-# Model valuation #
-###################
+####################
+# Model evaluation #
+####################
 
 def evaluate(model):
     """ Evaluate a given language detection model, using the test data generated when it was trained """
