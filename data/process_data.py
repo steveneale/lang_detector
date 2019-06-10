@@ -62,7 +62,7 @@ def get_minibatch_lines(doc_stream, size):
 def process_input_data(name, seed=False):
     """ Process input data from raw files into a CSV file
 
-    --- Assumes data/ folder (where this file is located) contains on subfolder per language
+    --- Assumes data/ folder (where this file is located) contains one subfolder per language
     --- Folder names should ideally correspond to ISO 639-1 codes:
         --- see: https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
     --- Files in each language folder are assumed to be:

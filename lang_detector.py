@@ -126,18 +126,30 @@ def train(languages, name, data=None, seed=False):
     pickle.dump(clf, open(os.path.join(dest, "classifier.pkl"), "wb"), protocol=4)
 
 
+#####################
+# Utility functions #
+#####################
+
+def load_model_from_path(model_path):
+    """ Load a model from a given path """
+
+    if not os.path.exists(model_path):
+        raise FileNotFoundError("The given model path could not be found.")
+    model = pickle.load(open(os.path.join(model, "pkl_objects", "classifier.pkl"), "rb"))
+    return model
+
+
 ######################
 # Language detection #
 ######################
 
-def detect_language(input_text, model):
+def detect_language(input_text, model_path):
     """ Detect the language of a given input text, using a given trained model """
 
-    # Load in the required model
-    clf = pickle.load(open(os.path.join(model, "pkl_objects", "classifier.pkl"), "rb"))
+    model = load_model_from_path(model_path)
     # Vectorise the input text and predict the language
     X = vect.transform([input_text])
-    y = clf.predict(X)[0]
+    y = model.predict(X)[0]
     # Return the predicted language
     return y
 
@@ -146,11 +158,10 @@ def detect_language(input_text, model):
 # Model evaluation #
 ####################
 
-def evaluate(model):
+def evaluate(model_path):
     """ Evaluate a given language detection model, using the test data generated when it was trained """
 
-    # Load in the given model
-    clf = pickle.load(open(os.path.join(".", model, "pkl_objects", "classifier.pkl"), "rb"))
+    model = load_model_from_path(model_path)
     # Load in the model's test set and replace any 'NaN' fields with empty strings
     test = pd.read_csv(os.path.join(".", model, "test.csv"))
     test["sentence"] = test["sentence"].fillna("")
@@ -158,7 +169,7 @@ def evaluate(model):
     X = vect.transform(test["sentence"].values)
     y = test["language"].values
     # Calculate and print the model's score on the test set
-    test_acc = clf.score(X, y)
+    test_acc = model.score(X, y)
     print("\nAccuracy for language detection model '{}':\n{}".format(os.path.basename(model), "-"*int(41+0)))
     print(test_acc)
     # Calculate and print the model's score on each language individually
@@ -166,7 +177,7 @@ def evaluate(model):
         lang_test = test.loc[test["language"] == lang]
         X = vect.transform(lang_test["sentence"].values)
         y = lang_test["language"].values
-        lang_acc = clf.score(X, y)
+        lang_acc = model.score(X, y)
         print("Accuracy for '{}': {}".format(lang, lang_acc))
 
 
