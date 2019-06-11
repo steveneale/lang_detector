@@ -24,5 +24,5 @@ config = { # The default list of supported languages
            # N-gram size for model training
            "grams": 2,
            # The default trained model to use for detection
-           "default_model": "./models/default"
+           "default_model": "./models/default_model"
          }

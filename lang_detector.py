@@ -135,7 +135,7 @@ def load_model_from_path(model_path):
 
     if not os.path.exists(model_path):
         raise FileNotFoundError("The given model path could not be found.")
-    model = pickle.load(open(os.path.join(model, "pkl_objects", "classifier.pkl"), "rb"))
+    model = pickle.load(open(os.path.join(model_path, "pkl_objects", "classifier.pkl"), "rb"))
     return model
 
 
@@ -147,10 +147,8 @@ def detect_language(input_text, model_path):
     """ Detect the language of a given input text, using a given trained model """
 
     model = load_model_from_path(model_path)
-    # Vectorise the input text and predict the language
     X = vect.transform([input_text])
     y = model.predict(X)[0]
-    # Return the predicted language
     return y
 
 
