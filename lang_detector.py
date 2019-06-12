@@ -161,14 +161,14 @@ def evaluate(model_path):
 
     model = load_model_from_path(model_path)
     # Load in the model's test set and replace any 'NaN' fields with empty strings
-    test = pd.read_csv(os.path.join(".", model, "test.csv"))
+    test = pd.read_csv(os.path.join(".", model_path, "test.csv"))
     test["sentence"] = test["sentence"].fillna("")
     # Extract the input sentences (vectorised) and language labels from the test set
     X = vect.transform(test["sentence"].values)
     y = test["language"].values
     # Calculate and print the model's score on the test set
     test_acc = model.score(X, y)
-    print("\nAccuracy for language detection model '{}':\n{}".format(os.path.basename(model), "-"*int(41+0)))
+    print("\nAccuracy for language detection model '{}':\n{}".format(os.path.basename(model_path), "-"*int(41+0)))
     print(test_acc)
     # Calculate and print the model's score on each language individually
     for lang in test["language"].unique():
