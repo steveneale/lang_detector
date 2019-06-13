@@ -28,36 +28,7 @@ import pickle
 
 from config import config
 
-############################################################
-# Tokenisation (gramification) and hashing vectorisation #
-############################################################
-
-def gramify(text):
-    """ Return a given text string as n-grams """
-
-    grams = []
-    # Return an empty list if the input text is empty or null
-    if text == None or text == "":
-        return grams
-    # Remove digits and punctuation (keep apostrophes), replace spaces with underscores, and lowercase
-    text = "_{}_".format(re.sub(r"[^\w\s']", "", text).strip().replace(" ", "_").lower())
-    # Iterate through n-1 characters in the input text
-    for i in range(0, len(text)-1, 1):
-        # Append the desired sized grams (bi or tri) to the list of grams
-        if config["grams"] == 2:
-            grams.append("{}{}".format(text[i], text[i+1]))
-        elif config["grams"] == 3 and i < len(text)-2:
-            grams.append("{}{}{}".format(text[i], text[i+1], text[i+2]))
-    # Return the list of n-grams
-    return grams
-
-
-# Create a hashing vectoriser, that splits the input text into grams
-vect = HashingVectorizer(decode_error="ignore",
-                         alternate_sign=False,
-                         n_features=2**21,
-                         preprocessor=None,
-                         tokenizer=gramify)
+from src import Vectoriser
 
 
 ######################
@@ -118,7 +89,7 @@ def train(languages, name, data=None, seed=False):
         X.append(train_row["sentence"] if type(train_row["sentence"]) == str else "")
         y.append(train_row["language"])
         if len(X)%1000 == 0:
-            X_vect = vect.transform(X)
+            X_vect = Vectoriser(gram_size=config["grams"]).transform(X)
             clf.partial_fit(X_vect, y, classes=languages)
             X, y = [], []
         pbar.update()
@@ -147,7 +118,7 @@ def detect_language(input_text, model_path):
     """ Detect the language of a given input text, using a given trained model """
 
     model = load_model_from_path(model_path)
-    X = vect.transform([input_text])
+    X = Vectoriser(gram_size=config["grams"]).transform([input_text])
     y = model.predict(X)[0]
     return y
 
@@ -164,7 +135,7 @@ def evaluate(model_path):
     test = pd.read_csv(os.path.join(".", model_path, "test.csv"))
     test["sentence"] = test["sentence"].fillna("")
     # Extract the input sentences (vectorised) and language labels from the test set
-    X = vect.transform(test["sentence"].values)
+    X = Vectoriser(gram_size=config["grams"]).transform(test["sentence"].values)
     y = test["language"].values
     # Calculate and print the model's score on the test set
     test_acc = model.score(X, y)

@@ -3,7 +3,7 @@
 """
 'vectoriser.py'
 
-Hashing vectoriser class
+Hashing vectoriser (with tokenisation) class
 
 2018-2019 Steve Neale <steveneale3000@gmail.com>
 """
@@ -22,10 +22,10 @@ class Vectoriser():
                                             alternate_sign=False,
                                             n_features=2**21,
                                             preprocessor=None,
-                                            tokenizer=self.tokeniser)
+                                            tokenizer=tokeniser)
 
 
-    def gramify(text):
+    def gramify(self, text):
 
         grams = []
         if text == None or text == "":
@@ -37,5 +37,11 @@ class Vectoriser():
             elif self.gram_size == 3 and i < len(text)-2:
                 grams.append("{}{}{}".format(text[i], text[i+1], text[i+2]))
         return grams
+
+
+    def transform(self, text):
+
+        vectorised = self.vectoriser.transform(text)
+        return vectorised
 
 
