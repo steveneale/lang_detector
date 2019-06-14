@@ -93,3 +93,12 @@ The model has been trained on 45000 sentences from each language, and evaluated 
 | Italian | 5000 | 99.5% |
 | ------ | ------ | ------ |
 | TOTAL | 30000 | 99.03% |
+
+
+## Tests
+
+*lang_detector* is complemented by unit tests, located in the `tests` directory. To run them, type the following from the *lang_detector*'s root directory:
+
+```bash
+python3 -m unittest discover -v -s tests
+```
