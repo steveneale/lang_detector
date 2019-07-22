@@ -1,6 +1,6 @@
 # lang_detector
 
-![version](https://img.shields.io/badge/version-0.1-important.svg)
+![version](https://img.shields.io/badge/version-0.1-important.svg) ![coverage](https://img.shields.io/badge/coverage-13%25-critical.svg)
 
 *lang_detector* is a program for detecting the language of input texts, and for training and evaluating the models used for detection.
 

@@ -1,5 +1,21 @@
+# .gitignore file for 'lang_detector'
+
 __pycache__/
-*.DS_Store*
+.DS_Store
+
+# Virtual environments
+bin/
+include/
+lib/
+.Python
+
+# IDEs
+.idea/
+
+# coverage.py
+.coverage
+htmlcov/
+
+# Output folders
 models/
-data/*
-lang-detector_new/
+data/
