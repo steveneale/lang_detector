@@ -4,16 +4,14 @@ __pycache__/
 .DS_Store
 
 # Virtual environments
-bin/
-include/
-lib/
-.Python
+.venv/
 
 # IDEs
 .idea/
 
 # coverage.py
 .coverage
+.coveragerc
 htmlcov/
 
 # Output folders
