@@ -12,10 +12,10 @@ import re
 
 from sklearn.feature_extraction.text import HashingVectorizer
 
+
 class Vectoriser():
 
     def __init__(self, tokenisation="gramify", gram_size=2):
-
         tokeniser = getattr(self, tokenisation)
         self.gram_size = gram_size
         self.vectoriser = HashingVectorizer(decode_error="ignore",
@@ -24,9 +24,7 @@ class Vectoriser():
                                             preprocessor=None,
                                             tokenizer=tokeniser)
 
-
     def gramify(self, text):
-
         grams = []
         if text == None or text == "":
             return grams
@@ -38,10 +36,6 @@ class Vectoriser():
                 grams.append("{}{}{}".format(text[i], text[i+1], text[i+2]))
         return grams
 
-
     def transform(self, text):
-
         vectorised = self.vectoriser.transform(text)
         return vectorised
-
-
