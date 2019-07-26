@@ -2,9 +2,15 @@ language: python
 python:
   - "3.5"
   - "3.6"
+<<<<<<< HEAD
 # Install the dependencies
 install:
   - pip install -r requirements.txt
 # Run the tests
 script:
   - python3 -m unittest discover -v -s tests/ 
+=======
+# Run the tests
+script:
+  - python3 -m unittest discover -v -s tests/ 
+>>>>>>> a71de6e914c7c64ccb279cc8c4818ab7ac39f77a
