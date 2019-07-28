@@ -12,8 +12,12 @@ __pycache__/
 
 # coverage.py
 .coverage
+.coverage.*
 .coveragerc
 htmlcov/
+
+# Testing
+.pytest_cache/
 
 # Output folders
 models/

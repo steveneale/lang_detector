@@ -28,6 +28,7 @@ import pickle
 
 from config import config
 
+from src.io.utils import create_directory
 from src import Vectoriser
 
 
@@ -72,9 +73,7 @@ def train(languages, name, data=None, seed=False):
     else:
         train, test = split_dataset(config["dataset"], languages, seed)
     # Define destination folders in the 'models' directory, and create them if necessary
-    dest = os.path.join(".", "models", name, "pkl_objects")
-    if not os.path.exists(dest):
-        os.makedirs(dest)
+    destination = create_directory("models/{}/pkl_objects".format(name))
     # Store the training and test data in the model's destination folder
     train.to_csv(os.path.join("./models", name, "train.csv"), index=False)
     test.to_csv(os.path.join("./models", name, "test.csv"), index=False)
@@ -94,7 +93,7 @@ def train(languages, name, data=None, seed=False):
             X, y = [], []
         pbar.update()
     # Store the trained model in its destination folder
-    pickle.dump(clf, open(os.path.join(dest, "classifier.pkl"), "wb"), protocol=4)
+    pickle.dump(clf, open(os.path.join(destination, "classifier.pkl"), "wb"), protocol=4)
 
 
 #####################
