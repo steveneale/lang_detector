@@ -9,6 +9,7 @@ Input/output utility functions
 """
 
 import os
+import pickle
 
 
 def create_directory(path):
@@ -16,3 +17,14 @@ def create_directory(path):
     if not os.path.exists(destination):
         os.makedirs(destination)
     return destination
+
+
+def save_pickled_model(model, destination):
+    destination_file = open(os.path.join(destination, "pkl_objects", "model.pkl"), "wb")
+    pickle.dump(model, destination_file, protocol=4)
+
+
+def load_pickled_model(source_location):
+    source_file = open(os.path.join(source_location, "pkl_objects", "model.pkl"), "rb")
+    model = pickle.load(source_file)
+    return model

@@ -28,7 +28,7 @@ import pickle
 
 from config import config
 
-from src.io.utils import create_directory
+from src.io.utils import create_directory, save_pickled_model, load_pickled_model
 from src import Vectoriser
 
 
@@ -73,7 +73,7 @@ def train(languages, name, data=None, seed=False):
     else:
         train, test = split_dataset(config["dataset"], languages, seed)
     # Define destination folders in the 'models' directory, and create them if necessary
-    destination = create_directory("models/{}/pkl_objects".format(name))
+    destination = create_directory("models/{}".format(name))
     # Store the training and test data in the model's destination folder
     train.to_csv(os.path.join("./models", name, "train.csv"), index=False)
     test.to_csv(os.path.join("./models", name, "test.csv"), index=False)
@@ -93,7 +93,7 @@ def train(languages, name, data=None, seed=False):
             X, y = [], []
         pbar.update()
     # Store the trained model in its destination folder
-    pickle.dump(clf, open(os.path.join(destination, "classifier.pkl"), "wb"), protocol=4)
+    save_pickled_model(clf, destination)
 
 
 #####################
@@ -105,7 +105,7 @@ def load_model_from_path(model_path):
 
     if not os.path.exists(model_path):
         raise FileNotFoundError("The given model path could not be found.")
-    model = pickle.load(open(os.path.join(model_path, "pkl_objects", "classifier.pkl"), "rb"))
+    model = load_pickled_model(model_path)
     return model
 
 
