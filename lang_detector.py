@@ -21,15 +21,12 @@ import pyprind
 import pandas as pd
 import numpy as np
 
-from sklearn.feature_extraction.text import HashingVectorizer
 from sklearn.naive_bayes import MultinomialNB
-
-import pickle
 
 from config import config
 
 from src.io.utils import create_directory, save_pickled_model, load_pickled_model
-from src import Vectoriser
+from src import Vectoriser, Detector
 
 
 ######################
@@ -109,17 +106,10 @@ def load_model_from_path(model_path):
     return model
 
 
-######################
-# Language detection #
-######################
-
 def detect_language(input_text, model_path):
-    """ Detect the language of a given input text, using a given trained model """
-
-    model = load_model_from_path(model_path)
-    X = Vectoriser(gram_size=config["grams"]).transform([input_text])
-    y = model.predict(X)[0]
-    return y
+    detector = Detector(gram_size=config["grams"])
+    language = detector.detect_language(input_text, model_path)
+    print(language)
 
 
 ####################
@@ -168,15 +158,16 @@ def parse_training_arguments(arguments):
     return(parser.parse_args())
 
 
-def parse_detection_arguments(arguments):
-    """ Parse command line arguments (for language detection) """
-    
+def parse_detection_arguments(arguments): 
     parser = argparse.ArgumentParser(description="lang-detector.py - Detect language for given input text")
     optional = parser._action_groups.pop()
     required = parser.add_argument_group("required arguments")
-    required.add_argument("-d", "--detect", help="Detect the language of a given input text", action="store_true")
-    required.add_argument("-i", "--input", help="Input text (string)", required=True)
-    optional.add_argument("-m", "--model", help="Language model to use for detection")
+    required.add_argument("-d", "--detect",
+                          help="Detect the language of a given input text", action="store_true")
+    required.add_argument("-i", "--input",
+                          help="Input text (string)", required=True)
+    optional.add_argument("-m", "--model",
+                          help="Language model to use for detection")
     parser._action_groups.append(optional)
     return(parser.parse_args())
 
@@ -214,10 +205,11 @@ if __name__ == "__main__":
                 languages = sorted(arguments.languages) if arguments.languages != None else sorted(config["languages"].keys())
                 # Train a language detection model
                 train(languages, arguments.name, arguments.data, arguments.seed)
-            # If the first argument was '-d/--detect'
             elif args[0] in ["-d", "--detect"]:
                 arguments = parse_detection_arguments(args)
-                # Detect and print the language of the input text using the supplied model
+                detect_language(arguments.input,
+                                os.path.join(".", os.path.normpath(arguments.model))
+                                if arguments.model is not None else config["default_model"])
                 print(detect_language(arguments.input, os.path.join(".", os.path.normpath(arguments.model)) if arguments.model != None else config["default_model"]))
             # If the first argument was '-e/--evaluate'
             elif args[0] in ["-e", "--evaluate"]:
