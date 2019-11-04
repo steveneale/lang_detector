@@ -1,6 +1,6 @@
 # lang_detector
 
-![version](https://img.shields.io/badge/version-0.1-important.svg) [![Travis CI](https://travis-ci.org/steveneale/lang_detector.svg?branch=master)](https://travis-ci.org/steveneale/lang_detector) ![coverage.py](https://img.shields.io/badge/coverage-33%28-orange.svg)
+![version](https://img.shields.io/badge/version-0.1-important.svg) [![Travis CI](https://travis-ci.org/steveneale/lang_detector.svg?branch=master)](https://travis-ci.org/steveneale/lang_detector) ![coverage.py](https://img.shields.io/badge/coverage-28%25-orange.svg)
 
 *lang_detector* is a program for detecting the language of input texts, and for training and evaluating the models used for detection.
 
