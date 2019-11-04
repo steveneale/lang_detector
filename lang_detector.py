@@ -1,12 +1,11 @@
-#!usr/bin/env python3
-#-*- coding: utf-8 -*-
+# !/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 'lang_detector.py'
 
 Train and evaluate language detection models, and predict input text language using them.
 
-2017 Steve Neale <steveneale3000@gmail.com>
-
+2019 Steve Neale <steveneale3000@gmail.com>
 """
 
 import sys

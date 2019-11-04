@@ -1,4 +1,4 @@
-#!usr/bin/env python3
+# !/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 'detector.py'
@@ -12,7 +12,7 @@ from src.io import ModelIO
 from src import Vectoriser
 
 
-class Detector:
+class Detector(object):
 
     def __init__(self, gram_size=2):
         self.grams = gram_size
