@@ -25,7 +25,7 @@ from sklearn.naive_bayes import MultinomialNB
 from config import config
 
 from src.io.utils import create_directory, save_pickled_model, load_pickled_model
-from src import Vectoriser, Detector
+from src import Vectoriser, Detector, Evaluator
 
 
 ######################
@@ -92,17 +92,14 @@ def train(languages, name, data=None, seed=False):
     save_pickled_model(clf, destination)
 
 
-#####################
-# Utility functions #
-#####################
+##################
+# Main functions #
+##################
 
-def load_model_from_path(model_path):
-    """ Load a model from a given path """
-
-    if not os.path.exists(model_path):
-        raise FileNotFoundError("The given model path could not be found.")
-    model = load_pickled_model(model_path)
-    return model
+def evaluate_model(model_path, test_path, for_languages="all", gram_size=2):
+    evaluator = Evaluator(gram_size=gram_size)
+    accuracy = evaluator.evaluate_model(model_path, test_path, for_languages=for_languages)
+    print(accuracy)
 
 
 def detect_language(input_text, model_path):
@@ -112,39 +109,12 @@ def detect_language(input_text, model_path):
 
 
 ####################
-# Model evaluation #
+# Argument parsing #
 ####################
-
-def evaluate(model_path):
-    """ Evaluate a given language detection model, using the test data generated when it was trained """
-
-    model = load_model_from_path(model_path)
-    # Load in the model's test set and replace any 'NaN' fields with empty strings
-    test = pd.read_csv(os.path.join(".", model_path, "test.csv"))
-    test["sentence"] = test["sentence"].fillna("")
-    # Extract the input sentences (vectorised) and language labels from the test set
-    X = Vectoriser(gram_size=config["grams"]).transform(test["sentence"].values)
-    y = test["language"].values
-    # Calculate and print the model's score on the test set
-    test_acc = model.score(X, y)
-    print("\nAccuracy for language detection model '{}':\n{}".format(os.path.basename(model_path), "-"*int(41+0)))
-    print(test_acc)
-    # Calculate and print the model's score on each language individually
-    for lang in test["language"].unique():
-        lang_test = test.loc[test["language"] == lang]
-        X = vect.transform(lang_test["sentence"].values)
-        y = lang_test["language"].values
-        lang_acc = model.score(X, y)
-        print("Accuracy for '{}': {}".format(lang, lang_acc))
-
-
-##################
-# Main functions #
-##################
 
 def parse_training_arguments(arguments):
     """ Parse command line arguments (for training) """
-    
+
     parser = argparse.ArgumentParser(description="lang_detector.py - Train a language detection model")
     optional = parser._action_groups.pop()
     required = parser.add_argument_group("required arguments")
@@ -173,12 +143,15 @@ def parse_detection_arguments(arguments):
 
 def parse_evaluation_arguments(arguments):
     """ Parse command line arguments (for evaluation) """
-    
+
     parser = argparse.ArgumentParser(description="lang_detector.py - Evaluate a pre-trained language detection model")
     optional = parser._action_groups.pop()
     required = parser.add_argument_group("required arguments")
-    required.add_argument("-e", "--evaluate", help="Evaluate a pre-trained language detection model", action="store_true")
-    required.add_argument("-m", "--model", help="Language model to use for detection")
+    required.add_argument("-e", "--evaluate", help="Evaluate a pre-trained model", action="store_true")
+    required.add_argument("-m", "--model", help="Path to the pre-trained to be evaluated", required=True)
+    optional.add_argument("-t", "--testdata", help="Path to test data for evaluation")
+    optional.add_argument("-l", "--forlanguages", help="Which language to evaluate", choices=["all", "each"], default="all")
+    optional.add_argument("-g", "--gramsize", help="Gram size of the pre-trained model", type=int, default=2)
     return(parser.parse_args())
 
 
@@ -214,7 +187,10 @@ if __name__ == "__main__":
             elif args[0] in ["-e", "--evaluate"]:
                 arguments = parse_evaluation_arguments(args)
                 # Evaluate the given language detection model
-                evaluate(os.path.normpath(arguments.model))
+                evaluate_model(os.path.normpath(arguments.model),
+                               os.path.normpath(arguments.testdata),
+                               arguments.forlanguages,
+                               arguments.gramsize)
             else:
                 print("ERROR: First argument must specify training (-t/--train), detection (-d/--detect), or evaluation (-e/--evaluate)")
         else:
