@@ -1,4 +1,4 @@
-#!usr/bin/env python3
+# !/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 'test_model_io.py'
@@ -38,3 +38,7 @@ class TestModelIO(unittest.TestCase):
     def test_save_model_to_destination(self, mock_save_pickled):
         ModelIO.save_model_to_destination(object, "test/destination")
         mock_save_pickled.assert_called_with(object, "test/destination")
+
+
+if __name__ == "__main__":
+    unittest.main()
