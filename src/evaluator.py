@@ -15,7 +15,7 @@ from pandas import DataFrame
 from src.io import ModelIO
 from src import Vectoriser
 
-from typing import Any, Tuple, List
+from typing import Union, Tuple, List, Dict
 
 
 class Evaluator(object):
@@ -28,7 +28,7 @@ class Evaluator(object):
         """
         self.grams = gram_size
 
-    def evaluate_model(self, model_path: str, test_path: str, for_languages: str = "all") -> Any:
+    def evaluate_model(self, model_path: str, test_path: str, for_languages: str = "all") -> Union[float, Dict]:
         """ Evaluate a given language detection model
 
         Arguments:
@@ -42,7 +42,7 @@ class Evaluator(object):
             ValueError: 'for_languages' option must be either 'all' or 'each'
 
         Returns:
-            [Any] -- accuracy, or a dictionary containing the accuracy for each language
+            Union[float, Dict] -- accuracy, or a dictionary containing the accuracy for each language
         """
         if for_languages not in ["all", "each"]:
             raise ValueError("'for_languages' option must be either 'all' or 'each'")
@@ -50,18 +50,18 @@ class Evaluator(object):
         test_data = pd.read_csv(test_path)
         return self._get_model_accuracy(model, test_data, for_languages=for_languages)
 
-    def _get_model_accuracy(self, model: str, test_data: str, for_languages: str = "all") -> Any:
+    def _get_model_accuracy(self, model: str, test_data: DataFrame, for_languages: str = "all") -> Union[float, Dict]:
         """ Get the accuracy of a given model
 
         Arguments:
             model {str} -- path to a language detection model
-            test_data {str} -- path to test data
+            test_data {DataFrame} -- Pandas DataFrame containing test data
 
         Keyword Arguments:
             for_languages {str} -- whether to evaluate 'all' or 'each' language(s) (default: {"all"})
 
         Returns:
-            Any -- accuracy, or a dictionary containing the accuracy for each language
+            Union[float, Dict] -- accuracy, or a dictionary containing the accuracy for each language
         """
         if for_languages == "all":
             X, y = self._get_test_sentences_and_labels(test_data)
@@ -69,7 +69,7 @@ class Evaluator(object):
         elif for_languages == "each":
             language_accuracies = {}
             for language in test_data["language"].unique():
-                language_data = test_data.iloc[test_data["language"] == language]
+                language_data = test_data.loc[test_data["language"] == language]
                 X, y = self._get_test_sentences_and_labels(language_data)
                 language_accuracies[language] = model.score(X, y)
             return language_accuracies
