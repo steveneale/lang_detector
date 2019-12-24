@@ -20,8 +20,8 @@ class TestVectoriser(unittest.TestCase):
     def test_gramify_2_grams(self):
         vectoriser = Vectoriser(tokenisation="gramify")
         grams = vectoriser.gramify("This, is the 1st sentence.")
-        self.assertEqual(grams, ["_t", "th", "hi", "is", "s_", "_i", "is", "s_", 
-                                 "_t", "th", "he", "e_", "_1", "1s", "st", "t_", 
+        self.assertEqual(grams, ["_t", "th", "hi", "is", "s_", "_i", "is", "s_",
+                                 "_t", "th", "he", "e_", "_1", "1s", "st", "t_",
                                  "_s", "se", "en", "nt", "te", "en", "nc", "ce", "e_"])
 
     def test_gramify_3_grams(self):
