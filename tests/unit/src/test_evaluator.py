@@ -31,6 +31,33 @@ class TestEvaluator(unittest.TestCase):
     def test_correctly_initialised_with_gram_size(self):
         self.assertEqual(self.evaluator.grams, 4)
 
+    def test_evaluate_model_with_invalid_for_languages_option(self):
+        with self.assertRaises(ValueError) as context:
+            evaluation = self.evaluator.evaluate_model("path/to/model",
+                                                       "path/to/test_data",
+                                                       for_languages="invalid")
+            self.assertEqual(evaluation, None)
+        self.assertEqual("'for_languages' option must be either 'all' or 'each'", str(context.exception))
+
+    @patch("src.Evaluator._get_model_accuracy")
+    @patch("src.evaluator.pd.read_csv")
+    @patch("src.evaluator.ModelIO.load_model_from_path")
+    def test_evaluate_model(self, mock_load_model, mock_read_csv, mock_get_accuracy):
+        # Mock objects, classes and methods
+        mocked_model, mocked_test_data = Mock(), Mock()
+        mock_load_model.return_value = mocked_model
+        mock_read_csv.return_value = mocked_test_data
+        mock_get_accuracy.return_value = {"en": 95.0, "fr": 97.0}
+        # Run the 'evaluate_model' method
+        evaluation = self.evaluator.evaluate_model("path/to/model", "path/to/test_data", for_languages="all")
+        # Make assertions
+        mock_load_model.assert_called_with("path/to/model")
+        mock_read_csv.assert_called_with("path/to/test_data")
+        mock_get_accuracy.assert_called_with(mocked_model, mocked_test_data, for_languages="all")
+        self.assertIsInstance(evaluation, dict)
+        self.assertEqual(evaluation["en"], 95.0)
+        self.assertEqual(evaluation["fr"], 97.0)
+
     @patch("src.Evaluator._get_test_sentences_and_labels")
     def test_get_model_accuracy_for_all_languages(self, mock_sents_and_labels):
         # Mock objects, classes and methods
