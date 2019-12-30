@@ -1,0 +1,13 @@
+# The default list of supported languages
+languages:
+  de: German
+  en: English
+  es: Spanish
+  fr: French
+  it: Italian
+  pt: Portuguese
+# Default proportion (1.0 = 100%) of the input data to use as a test set
+# --- The rest is used for training
+test_size: 0.2
+# Default n-gram size for training
+grams: 2
