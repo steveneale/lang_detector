@@ -5,6 +5,9 @@ python:
 # Install the dependencies
 install:
   - pip install -r requirements.txt
-# Run the tests
+# Run the tests and produce a coverage report
 script:
-  - python3 -m unittest discover -v -s tests/
+  - pytest -v --cov src/ tests/
+# Upload the coverage report to http://coveralls.io
+after_success:
+  - coveralls
