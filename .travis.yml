@@ -7,7 +7,7 @@ install:
   - pip install -r requirements.txt
 # Run the tests and produce a coverage report
 script:
-  - pytest -v --cov src/ tests/
+  - pytest -v --cov-config=.coveragerc --cov src/ tests/
 # Upload the coverage report to http://coveralls.io
 after_success:
   - coveralls

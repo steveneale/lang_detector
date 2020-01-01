@@ -13,7 +13,6 @@ __pycache__/
 # coverage.py
 .coverage
 .coverage.*
-.coveragerc
 htmlcov/
 
 # Testing
