@@ -1,6 +1,6 @@
 # lang_detector
 
-![version](https://img.shields.io/badge/version-0.1-important.svg) [![Travis CI](https://travis-ci.com/steveneale/lang_detector.svg?branch=master)](https://travis-ci.com/steveneale/lang_detector) [![Coverage Status](https://coveralls.io/repos/github/steveneale/lang_detector/badge.svg?branch=develop)](https://coveralls.io/github/steveneale/lang_detector?branch=develop)
+![version](https://img.shields.io/badge/version-0.1-important.svg) [![Travis CI](https://travis-ci.com/steveneale/lang_detector.svg?branch=master)](https://travis-ci.com/steveneale/lang_detector) [![Coverage Status](https://coveralls.io/repos/github/steveneale/lang_detector/badge.svg?branch=master&service=github)](https://coveralls.io/github/steveneale/lang_detector?branch=master&service=github)
 
 *lang_detector* is a program for detecting the language of input texts, and for training and evaluating the models used for detection.
 
